@@ -1,0 +1,62 @@
+### addStudent
+POST http://localhost:8080/students
+Content-Type: application/json
+
+{
+  "name": "Lukasz"
+}
+
+### getAllStudents
+GET http://localhost:8080/students
+
+### findStudentById
+< {%
+    request.variables.set("studentId", "1")
+%}
+GET http://localhost:8080/students/{{studentId}}
+
+### findStudentByName
+< {%
+    request.variables.set("studentName", "Lukasz")
+%}
+GET http://localhost:8080/students/name/{{studentName}}
+
+### updateStudentName
+PUT http://localhost:8080/students
+Content-Type: application/json
+
+{
+  "id": "6",
+  "name": "Tomek"
+}
+
+### createAddressForStudent
+< {%
+    request.variables.set("studentId", "1")
+%}
+POST http://localhost:8080/students/{{studentId}}/addresses
+Content-Type: application/json
+
+{
+  "id": 4,
+  "street": "Francuska"
+}
+
+### getAddressesByIdForStudentById
+< {%
+    request.variables.set("studentId", "1")
+%}
+GET http://localhost:8080/students/{{studentId}}/addresses
+
+### getAddressByIdForStudentById
+< {%
+    request.variables.set("studentId", "1")
+    request.variables.set("addressId", "1")
+%}
+GET http://localhost:8080/students/{{studentId}}/addresses/{{addressId}}
+
+### deleteStudentById
+< {%
+    request.variables.set("studentId", "8")
+%}
+DELETE http://localhost:8080/students/{{studentId}}

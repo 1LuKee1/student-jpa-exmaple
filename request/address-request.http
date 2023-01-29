@@ -1,0 +1,16 @@
+### saveAddress
+POST http://localhost:8080/address
+Content-Type: application/json
+
+{
+  "street": "Zwyciestwa"
+}
+
+### getAddresses
+GET http://localhost:8080/address
+
+### deleteAddressById
+< {%
+    request.variables.set("id", "1")
+%}
+DELETE http://localhost:8080/address/{{id}}
