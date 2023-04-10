@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgres:5432/personDb
+    username: postgres
+    password: postgres
+    name: personDb
+    hikari:
+      connection-timeout: 0
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
+
+http:
+  client:
+    url: https://rickandmortyapi.com/api/character/1,2,3,4
+
+
+#     data-locations:
+#       - classpath:db/data.sql
+
