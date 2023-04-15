@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://postgres:5432/personDb
+    url: jdbc:postgresql://localhost:5432/personDb
     username: postgres
     password: postgres
     name: personDb
@@ -9,11 +9,20 @@ spring:
       connection-timeout: 0
 
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    generate-ddl: true
+    generate-ddl: off
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+
+  liquibase:
+    change-log: classpath:db/master.xml
+
+#     data-locations:
+#       - classpath:db/testdata.sql
+
+logging:
+  pattern:
+    console: -%clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}
 
 feign:
   client:
@@ -21,13 +30,12 @@ feign:
       default:
         connectTimeout: 5000
         readTimeout: 5000
-        loggerLevel: basic
+        loggerLevel: full
 
 http:
   client:
-    url: https://rickandmortyapi.com/api/character/1,2,3,4
+    url: https://rickandmortyapi.com
 
 
-#     data-locations:
-#       - classpath:db/data.sql
+
 

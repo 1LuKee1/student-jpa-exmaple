@@ -2,17 +2,16 @@ package com.example.studentjpaexmaple.domain.address;
 
 import com.example.studentjpaexmaple.domain.address.dto.AddressDto;
 import com.example.studentjpaexmaple.domain.person.Person;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 
 import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
+        unmappedTargetPolicy = ReportingPolicy.ERROR
+)
 public interface AddressMapper {
 
 

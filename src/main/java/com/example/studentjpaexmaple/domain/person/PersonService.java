@@ -1,7 +1,6 @@
 package com.example.studentjpaexmaple.domain.person;
 
 import com.example.studentjpaexmaple.domain.address.Address;
-import com.example.studentjpaexmaple.domain.person.dto.PersonDto;
 import lombok.AllArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +17,6 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final PersonValidator validator;
 
-
-    @Transactional
     public Person createPerson(Person personToSave) {
         if (personRepository.findById(personToSave.getId()).isPresent()) {
             throw new RuntimeException("Person " + personToSave.getId() + " already exists");

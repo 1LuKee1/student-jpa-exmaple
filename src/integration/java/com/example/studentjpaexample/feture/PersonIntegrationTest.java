@@ -1,10 +1,13 @@
 package com.example.studentjpaexample.feture;
 
-import com.example.studentjpaexample.SampleCharacterResponse;
-import com.example.studentjpaexmaple.domain.address.dto.AddressDto;
-import com.example.studentjpaexmaple.domain.person.dto.PersonDto;
-import com.example.studentjpaexmaple.domain.person.PersonRepository;
 import com.example.studentjpaexample.BaseIntegrationTest;
+import com.example.studentjpaexample.SampleCharacterResponse;
+import com.example.studentjpaexmaple.domain.address.Address;
+import com.example.studentjpaexmaple.domain.address.dto.AddressDto;
+import com.example.studentjpaexmaple.domain.person.Person;
+import com.example.studentjpaexmaple.domain.person.PersonRepository;
+import com.example.studentjpaexmaple.domain.person.dto.PersonDto;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -21,15 +25,34 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class PersonRestControllerIntegrationTest extends BaseIntegrationTest implements SampleCharacterResponse {
+class PersonIntegrationTest extends BaseIntegrationTest  {
 
 
     @Autowired
     private PersonRepository personRepository;
 
+    @AfterEach
+    void tearDown() {
+        personRepository.deleteAll();
+    }
+
+
     @BeforeEach
     void setup() {
-        personRepository.deleteAll();
+        personRepository.saveAllAndFlush(
+                List.of(
+                        new Person(UUID.randomUUID(), "John", "Doe", LocalDate.of(2000, 2, 17), List.of(
+                                new Address(UUID.randomUUID(), "someStreetname121324234", "6423-13212", "102b", "2", true),
+                                new Address(UUID.randomUUID(), "someStreetname97897976", "6423-13212", "102b", "2", true)
+                        )),
+                        new Person(UUID.randomUUID(), "Luke", "Skywalker", LocalDate.of(2010, 10, 22), Collections.emptyList()),
+                        new Person(UUID.randomUUID(), "Yugin", "Frach", LocalDate.of(1980, 10, 22), List.of(
+                                new Address(UUID.randomUUID(), "someStreetname14121", "6423-13212", "102b", "2", true),
+                                new Address(UUID.randomUUID(), "someStreetname2131", "6423-13212", "102b", "2", false)
+                        )),
+                        new Person(UUID.randomUUID(), "Jacob", "Walker", LocalDate.of(1975, 5, 31), Collections.emptyList())
+                ));
+
     }
 
 

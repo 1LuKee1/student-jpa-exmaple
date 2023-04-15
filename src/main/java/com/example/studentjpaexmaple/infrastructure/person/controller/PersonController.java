@@ -44,15 +44,9 @@ public class PersonController {
         return new ResponseEntity<>(mappedPersonById, HttpStatus.OK);
     }
 
-    @GetMapping("/personname/{personName}")
-    public ResponseEntity<PersonDto> findAllAdultsPerson(@PathVariable String personName) {
-        Person personByFirstName = personService.findPersonByFirstName(personName);
-        PersonDto mapToPersonDto = personMapper.mapToPersonDto(personByFirstName);
-        return new ResponseEntity<>(mapToPersonDto, HttpStatus.OK);
-    }
 
     @GetMapping("/isadult")
-    public ResponseEntity<List<PersonDto>> findAllAdultsPerson() {
+    public ResponseEntity<List<PersonDto>> findPersonByName() {
         List<Person> allAdultsPersons = personService.getAllAdultsPersons();
         List<PersonDto> personDtos = allAdultsPersons.stream()
                 .map(personMapper::mapToPersonDto)
@@ -67,7 +61,6 @@ public class PersonController {
         PersonDto mappedPersonToDto = personMapper.mapToPersonDto(person);
         return new ResponseEntity<>(mappedPersonToDto, HttpStatus.ACCEPTED);
     }
-
 
     @DeleteMapping("{personId}")
     public ResponseEntity<Void> deleteStudentById(@PathVariable UUID personId) {

@@ -6,7 +6,8 @@ import org.mapstruct.*;
 
 @Mapper(uses = AddressMapper.class,
         componentModel = MappingConstants.ComponentModel.SPRING,
-        injectionStrategy = InjectionStrategy.FIELD
+        injectionStrategy = InjectionStrategy.FIELD,
+        unmappedTargetPolicy = ReportingPolicy.ERROR
 )
 public interface PersonMapper {
 

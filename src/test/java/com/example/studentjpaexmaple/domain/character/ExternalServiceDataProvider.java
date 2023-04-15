@@ -1,14 +1,13 @@
 package com.example.studentjpaexmaple.domain.character;
 
 import com.example.studentjpaexmaple.domain.character.dto.CharacterResponse;
+import com.example.studentjpaexmaple.domain.character.model.Episode;
+import com.example.studentjpaexmaple.domain.character.model.Location;
+import com.example.studentjpaexmaple.domain.character.model.Origin;
 
 import java.util.List;
 
 interface ExternalServiceDataProvider {
-
-    default List<CharacterResponse> offersToFetch() {
-        return List.of(rickSanchezCharacterResponse(), mortySmithCharacterResponse());
-    }
 
     default CharacterResponse rickSanchezCharacterResponse() {
         return new CharacterResponse(1, "Rick Sanchez", "Alive", "Human", "", "Male",

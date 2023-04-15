@@ -2,7 +2,6 @@ package com.example.studentjpaexmaple.domain.person;
 
 import com.example.studentjpaexmaple.domain.address.Address;
 import lombok.*;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -14,18 +13,23 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class Person {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    @NonNull
     private String firstName;
-    @NonNull
     private String lastName;
-    @NonNull
     private LocalDate birthDate;
-    @NonNull
-    @OneToMany(mappedBy = "person")
+    @OneToMany(
+            mappedBy = "person",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL)
     private List<Address> addresses;
+
+    public Person(String firstName, String lastName, LocalDate birthDate, List<Address> addresses) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+        this.addresses = addresses;
+    }
 }

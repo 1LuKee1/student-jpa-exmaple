@@ -1,5 +1,7 @@
 package com.example.studentjpaexample;
 
+import com.example.studentjpaexmaple.domain.character.dto.CharacterResponse;
+
 public interface SampleCharacterResponse {
 
     default String bodyWithTwoCharactersJson() {

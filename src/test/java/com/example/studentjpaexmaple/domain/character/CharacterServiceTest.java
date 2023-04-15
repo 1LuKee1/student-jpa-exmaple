@@ -1,6 +1,8 @@
 package com.example.studentjpaexmaple.domain.character;
 
 import com.example.studentjpaexmaple.domain.character.dto.CharacterResponse;
+import com.example.studentjpaexmaple.domain.character.model.Character;
+import com.example.studentjpaexmaple.infrastructure.character.http.CharacterFetcherServiceHttpClient;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -16,29 +18,30 @@ import static org.mockito.Mockito.mock;
 class CharacterServiceTest implements ExternalServiceDataProvider {
 
     private final CharacterRepository characterRepository = mock(CharacterRepository.class);
-    private final CharacterFetcherClient client = mock(CharacterFetcherClient.class);
+    private final CharacterFetcherServiceHttpClient client = mock(CharacterFetcherServiceHttpClient.class);
     private final CharacterMapper characterMapper = Mappers.getMapper(CharacterMapper.class);
-    private final CharacterService characterService = new CharacterService(characterRepository, characterMapper, client);
+    private final CharactersFetcher charactersFetcher = mock(CharactersFetcher.class);
+    private final CharacterService characterService = new CharacterService(characterRepository, characterMapper, charactersFetcher, client);
 
 
     @Test
     void should_fetch_character_and_save_when_there_are_character_in_external_server() {
         //given
-        List<CharacterResponse> characterResponse = offersToFetch();
-        List<Character> characters = characterMapper.mapToCharacter(characterResponse);
-        Character rick = characterMapper.mapToCharacter(rickSanchezCharacterResponse());
-        Character morty = characterMapper.mapToCharacter(mortySmithCharacterResponse());
+        final String searchedCharacterId = "1";
 
-        given(client.getCharacter()).willReturn(characterResponse);
-        given(characterRepository.saveAllAndFlush(characters)).willReturn(characters);
+        CharacterResponse rickSanchezCharacterResponse = rickSanchezCharacterResponse();
+        Character character = characterMapper.mapToCharacter(rickSanchezCharacterResponse);
+
+        given(characterRepository.saveAndFlush(character)).willReturn(character);
+        given(charactersFetcher.fetchSingleCharacter(searchedCharacterId)).willReturn(rickSanchezCharacterResponse);
 
         //when
-        List<Character> fetchedCharacters = characterService.fetchCharacterAndSave();
+        CharacterResponse characterResponse = characterService.fetchSingleCharacter(searchedCharacterId);
 
         //then
         assertAll(
-                () -> assertThat(fetchedCharacters).hasSize(2),
-                () -> assertThat(fetchedCharacters).containsExactlyInAnyOrder(rick, morty)
+                () -> assertThat(characterResponse).isNotNull(),
+                () -> assertThat(characterResponse).isEqualTo(rickSanchezCharacterResponse)
         );
     }
 
@@ -60,12 +63,11 @@ class CharacterServiceTest implements ExternalServiceDataProvider {
     @Test
     void should_find_all_character_when_there_are_in_database() {
         //given
-        List<CharacterResponse> characterResponses = offersToFetch();
-        List<Character> charactersInDatabase = characterMapper.mapToCharacter(characterResponses);
         CharacterResponse rickSanchezCharacterResponse = rickSanchezCharacterResponse();
         CharacterResponse mortySmithCharacterResponse = mortySmithCharacterResponse();
         Character mappedRick = characterMapper.mapToCharacter(rickSanchezCharacterResponse);
         Character mappedMorty = characterMapper.mapToCharacter(mortySmithCharacterResponse);
+        List<Character> charactersInDatabase = List.of(mappedRick, mappedMorty);
         given(characterRepository.findAll()).willReturn(charactersInDatabase);
 
         //when

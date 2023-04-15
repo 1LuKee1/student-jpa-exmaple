@@ -2,7 +2,7 @@ package com.example.studentjpaexmaple.domain.address;
 
 import com.example.studentjpaexmaple.domain.person.Person;
 import lombok.*;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -12,23 +12,29 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class Address {
     @Id
-    @GeneratedValue
-    @NonNull
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    @NonNull
     private String streetName;
-    @NonNull
     private String communeCode;
-    @NonNull
     private String houseNumber;
-    @NonNull
     private String flatNumber;
-    @NonNull
     private boolean isDefault;
-    @ManyToOne
-    @JoinColumn(name = "person_lastname", referencedColumnName = "lastname")
+    @ManyToOne(cascade = {
+            CascadeType.MERGE,
+            CascadeType.PERSIST
+    })
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person person;
+
+
+    public Address(UUID id, String streetName, String communeCode, String houseNumber, String flatNumber, boolean isDefault) {
+        this.id = id;
+        this.streetName = streetName;
+        this.communeCode = communeCode;
+        this.houseNumber = houseNumber;
+        this.flatNumber = flatNumber;
+        this.isDefault = isDefault;
+    }
 }
