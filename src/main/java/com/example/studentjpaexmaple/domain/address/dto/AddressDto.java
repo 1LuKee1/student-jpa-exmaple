@@ -1,5 +1,6 @@
 package com.example.studentjpaexmaple.domain.address.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +18,6 @@ public class AddressDto {
     private String communeCode;
     private String houseNumber;
     private String flatNumber;
+    @JsonProperty(value = "isDefault")
     private boolean isDefault;
 }

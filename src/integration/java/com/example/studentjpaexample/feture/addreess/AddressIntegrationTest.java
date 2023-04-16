@@ -1,4 +1,4 @@
-package com.example.studentjpaexample.feture;
+package com.example.studentjpaexample.feture.addreess;
 
 import com.example.studentjpaexample.BaseIntegrationTest;
 

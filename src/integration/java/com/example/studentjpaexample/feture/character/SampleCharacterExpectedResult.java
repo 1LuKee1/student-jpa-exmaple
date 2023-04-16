@@ -1,4 +1,4 @@
-package com.example.studentjpaexample;
+package com.example.studentjpaexample.feture.character;
 
 import com.example.studentjpaexmaple.domain.character.model.Episode;
 import com.example.studentjpaexmaple.domain.character.model.Location;

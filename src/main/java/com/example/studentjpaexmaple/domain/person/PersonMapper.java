@@ -11,6 +11,7 @@ import org.mapstruct.*;
 )
 public interface PersonMapper {
 
+    @Mapping(source = "birthDate",target = "birthDate",dateFormat = "dd-MMM-yyyy")
     Person mapToPerson(PersonDto personDTO);
 
     @Mapping(source = "person", target = "defaultAddress", qualifiedByName = "defaultAddress")

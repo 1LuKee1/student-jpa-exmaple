@@ -28,7 +28,7 @@ public class PersonController {
         return new ResponseEntity<>(mappedPerson, HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<PersonDto>> getAllPerson() {
         List<Person> allPersons = personService.getAllPersons();
         List<PersonDto> personDtos = allPersons.stream()

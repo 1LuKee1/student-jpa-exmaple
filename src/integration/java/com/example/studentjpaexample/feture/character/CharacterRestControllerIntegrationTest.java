@@ -1,8 +1,6 @@
-package com.example.studentjpaexample.feture;
+package com.example.studentjpaexample.feture.character;
 
 import com.example.studentjpaexample.BaseIntegrationTest;
-import com.example.studentjpaexample.SampleCharacterExpectedResult;
-import com.example.studentjpaexample.SampleCharacterResponse;
 import com.example.studentjpaexmaple.domain.character.dto.CharacterResponse;
 import com.example.studentjpaexmaple.infrastructure.character.http.controller.CharacterController;
 import com.github.tomakehurst.wiremock.client.WireMock;

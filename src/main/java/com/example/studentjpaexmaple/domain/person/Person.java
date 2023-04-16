@@ -1,6 +1,7 @@
 package com.example.studentjpaexmaple.domain.person;
 
 import com.example.studentjpaexmaple.domain.address.Address;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,10 +16,12 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Person {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
+    @Column(name="id", insertable = false, updatable = false, nullable = false)
     private UUID id;
     private String firstName;
     private String lastName;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
     @OneToMany(
             mappedBy = "person",

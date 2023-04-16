@@ -32,11 +32,14 @@ public class CharacterController {
         return ResponseEntity.ok().body(characterResponse);
     }
 
+    //                  FOR TEST
     @GetMapping("{id}")
     public ResponseEntity<CharacterResponse> getCharacterResponseForTest(@PathVariable String id) {
         CharacterResponse characterResponse = characterService.getCharacterForTest(id);
         return ResponseEntity.ok().body(characterResponse);
     }
+
+//                  FOR TEST
 
 
     @GetMapping("/saved/{id}")

@@ -3,8 +3,10 @@ package com.example.studentjpaexmaple.domain.person.dto;
 
 import com.example.studentjpaexmaple.domain.address.dto.AddressDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,10 +20,17 @@ public class PersonDto {
     private UUID id;
     private String firstName;
     private String lastName;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthDate;
-    @JsonIgnore
     private AddressDto defaultAddress;
-    @JsonIgnore
     private List<AddressDto> addresses;
+
+
+    public PersonDto(UUID id, String firstName, String lastName, LocalDate birthDate, List<AddressDto> addresses) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+        this.addresses = addresses;
+    }
 }

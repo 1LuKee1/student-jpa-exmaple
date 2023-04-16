@@ -15,6 +15,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 public interface AddressMapper {
 
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "person", ignore = true)
     @Mapping(source = "default", target = "default")
     Address mapToAddress(AddressDto addressDTO);

@@ -1,8 +1,9 @@
 package com.example.studentjpaexmaple.domain.address;
 
 import com.example.studentjpaexmaple.domain.person.Person;
-import lombok.*;
-import org.hibernate.annotations.Cascade;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -14,18 +15,16 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Address {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
+    @Column(name = "id", insertable = false, updatable = false, nullable = false)
     private UUID id;
     private String streetName;
     private String communeCode;
     private String houseNumber;
     private String flatNumber;
     private boolean isDefault;
-    @ManyToOne(cascade = {
-            CascadeType.MERGE,
-            CascadeType.PERSIST
-    })
-    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "person_id")
     private Person person;
 
 

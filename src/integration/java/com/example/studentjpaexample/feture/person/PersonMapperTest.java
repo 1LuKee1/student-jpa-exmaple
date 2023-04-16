@@ -1,4 +1,4 @@
-package com.example.studentjpaexample.mapper;
+package com.example.studentjpaexample.feture.person;
 
 import com.example.studentjpaexmaple.domain.address.Address;
 import com.example.studentjpaexmaple.domain.address.AddressMapper;
@@ -68,7 +68,7 @@ class PersonMapperTest {
                 () -> assertThat(personDto.getLastName()).isEqualTo(person.getLastName()),
                 () -> assertThat(personDto.getBirthDate()).isEqualTo(person.getBirthDate()),
                 () -> assertThat(personDto.getDefaultAddress()).isEqualTo(addressMapper.maptoAddressDto(address1)),
-                () -> assertThat(personDto.getAddresses()).containsExactlyInAnyOrder(addressMapper.maptoAddressDto(address2))
+                () -> assertThat(personDto.getAddresses()).containsExactlyInAnyOrder(addressMapper.maptoAddressDto(address2)).hasSize(1)
 
         );
     }

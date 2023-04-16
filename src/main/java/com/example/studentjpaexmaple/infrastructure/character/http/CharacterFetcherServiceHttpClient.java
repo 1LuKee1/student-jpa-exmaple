@@ -9,13 +9,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(value = "characterFetcherClient",
-        url = "${http.client.url}"
+        url = "${http.client.url}",
+        path = "/api/character"
 )
 public interface CharacterFetcherServiceHttpClient extends CharactersFetcher {
 
-    @GetMapping("/api/character/{id}")
+    @GetMapping("/{id}")
     CharacterResponse fetchSingleCharacter(@PathVariable("id") String id);
 
-    @GetMapping("/character")
+    @GetMapping()
     CharacterListResponse fetchListOfCharacters(@RequestParam(value = "page", defaultValue = "1") int page);
+
+
 }

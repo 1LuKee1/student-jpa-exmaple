@@ -29,7 +29,7 @@ public class AddressController {
         return new ResponseEntity<>(addressDto, HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<AddressDto>> getAddresses() {
         List<Address> allAddresses = addressService.getAllAddresses();
         List<AddressDto> addressDtos = allAddresses.stream()

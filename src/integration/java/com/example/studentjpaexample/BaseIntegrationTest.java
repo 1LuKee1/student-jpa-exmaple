@@ -1,6 +1,7 @@
 package com.example.studentjpaexample;
 
 import com.example.studentjpaexmaple.PersonSpringBootApplication;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,11 +14,15 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
+
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,9 +47,13 @@ public class BaseIntegrationTest {
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(DockerImageName.parse(POSTGRES_IMAGE));
 
-    @BeforeAll
-    static void beforeAll() {
-        postgreSQLContainer.start();
+    protected String asJson(final Object object) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(object);
+    }
+
+    protected <T> T asObject(ResultActions resultActions, Class<T> clazz) throws JsonProcessingException, UnsupportedEncodingException {
+        String contentAsString = resultActions.andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        return objectMapper.readValue(contentAsString, clazz);
     }
 
     @RegisterExtension

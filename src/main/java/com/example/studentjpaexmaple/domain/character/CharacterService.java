@@ -51,13 +51,13 @@ public class CharacterService implements CharacterFetcherServiceHttpClient {
                 .toList();
     }
 
-    public CharacterResponse getCharacterForTest(String id) {
-        return client.fetchSingleCharacter(id);
-    }
-
     private List<Character> filterNotExistingCharacters(CharacterListResponse characterListResponse) {
         return characterListResponse.getCharactersResponse().stream()
                 .filter(character -> !characterRepository.existsById(character.getId()))
                 .toList();
+    }
+
+    public CharacterResponse getCharacterForTest(String id) {
+        return client.fetchSingleCharacter(id);
     }
 }

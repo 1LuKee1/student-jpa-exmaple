@@ -1,86 +1,122 @@
-package com.example.studentjpaexample.feture;
+package com.example.studentjpaexample.feture.person;
 
 import com.example.studentjpaexample.BaseIntegrationTest;
-import com.example.studentjpaexample.SampleCharacterResponse;
-import com.example.studentjpaexmaple.domain.address.Address;
 import com.example.studentjpaexmaple.domain.address.dto.AddressDto;
-import com.example.studentjpaexmaple.domain.person.Person;
 import com.example.studentjpaexmaple.domain.person.PersonRepository;
 import com.example.studentjpaexmaple.domain.person.dto.PersonDto;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
-import java.util.Collections;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class PersonIntegrationTest extends BaseIntegrationTest  {
 
+class PersonIntegrationTest extends BaseIntegrationTest implements PersonTestDataProvider {
+
+    private static final String PERSON_CONTROLLER_PATH = "/person";
 
     @Autowired
     private PersonRepository personRepository;
-
-    @AfterEach
-    void tearDown() {
-        personRepository.deleteAll();
-    }
-
-
-    @BeforeEach
-    void setup() {
-        personRepository.saveAllAndFlush(
-                List.of(
-                        new Person(UUID.randomUUID(), "John", "Doe", LocalDate.of(2000, 2, 17), List.of(
-                                new Address(UUID.randomUUID(), "someStreetname121324234", "6423-13212", "102b", "2", true),
-                                new Address(UUID.randomUUID(), "someStreetname97897976", "6423-13212", "102b", "2", true)
-                        )),
-                        new Person(UUID.randomUUID(), "Luke", "Skywalker", LocalDate.of(2010, 10, 22), Collections.emptyList()),
-                        new Person(UUID.randomUUID(), "Yugin", "Frach", LocalDate.of(1980, 10, 22), List.of(
-                                new Address(UUID.randomUUID(), "someStreetname14121", "6423-13212", "102b", "2", true),
-                                new Address(UUID.randomUUID(), "someStreetname2131", "6423-13212", "102b", "2", false)
-                        )),
-                        new Person(UUID.randomUUID(), "Jacob", "Walker", LocalDate.of(1975, 5, 31), Collections.emptyList())
-                ));
-
-    }
 
 
     @Test
     void should_create_person_and_save_when_all_perams_are_correct() throws Exception {
         // given
-        PersonDto personDto = new PersonDto(UUID.randomUUID(), "John", "Doe", LocalDate.of(1999, 10, 12), new AddressDto(), Collections.emptyList());
+        String str = "2000-17-02";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-dd-MM");
+        LocalDate localDate = LocalDate.parse(str, formatter);
+
+
+        AddressDto address1 = new AddressDto(UUID.randomUUID(), "someStreetname1", "6423-13212", "102b", "2", true);
+        AddressDto address2 = new AddressDto(UUID.randomUUID(), "someStreetname2", "6423-13212", "102b", "2", false);
+
+        PersonDto personDto = new PersonDto(UUID.randomUUID(),
+                "John",
+                "Doe",
+                localDate,
+                address1,
+                List.of(address1, address2)
+        );
 
         //when
-        ResultActions response = mockMvc.perform(post("/person")
+        ResultActions response = mockMvc.perform(post(PERSON_CONTROLLER_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(personDto)));
 
         // then - verify the result or output using assert statements
         response.andDo(print()).
                 andExpect(status().isCreated())
-                .andExpect(jsonPath("$.firstName",
-                        is(personDto.getFirstName())))
-                .andExpect(jsonPath("$.lastName",
-                        is(personDto.getLastName())))
-                .andExpect(jsonPath("$.defaultAddress",
-                        is(personDto.getDefaultAddress())))
-                .andExpect(jsonPath("$.addresses",
-                        is(personDto.getAddresses())));
+                .andExpect(jsonPath("$.firstName").value(personDto.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(personDto.getLastName()))
+                .andExpect(jsonPath("$.defaultAddress").value(personDto.getDefaultAddress()))
+                .andExpect(jsonPath("$.addresses").value(personDto.getAddresses()));
 
     }
 
+    @Test
+    void testGetAllPersonsShouldReturn() throws Exception {
+        //given
+        personRepository.saveAll(prepareMockData());
 
+        //when
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(PERSON_CONTROLLER_PATH + "/all"));
+
+        //then
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.person").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("John"));
+    }
+
+//    @Test
+//    void testGetAllPersonsShouldReturn2() throws Exception {
+//        //given
+//        personRepository.saveAll(PersonTestDataProvider.prepareMockData());
+//
+//        //when
+//        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(PERSON_CONTROLLER_PATH + "/all"));
+//
+//        //then
+//        PersonListResponse personListResponse = asObject(resultActions, PersonListResponse.class);
+//
+//        Assertions.assertAll(
+//                () -> Assertions.assertEquals(resultActions.andReturn().getResponse().getStatus(), 200),
+//                () -> Assertions.assertNotNull(personListResponse),
+//                () -> Assertions.assertEquals(personListResponse.getPersons().size(), 3),
+//                () -> Assertions.assertNotNull(personListResponse.getPersons().get(0).getFirstName(), "Mateusz"));
+//    }
+//
+//    @Test
+//    void testGetAllPersonsShouldReturn3() throws Exception {
+//        //given
+//        personRepository.saveAll(PersonTestDataProvider.prepareMockData());
+//        PersonListResponse expectedResponse = PersonTestDataProvider.preparePersonListResponse();
+//
+//        //when
+//        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(PERSON_CONTROLLER_PATH + "/all"));
+//
+//        //then
+//        PersonListResponse response = asObject(resultActions, PersonListResponse.class);
+//
+//        assertThat(response)
+//                .usingRecursiveComparison()
+//                .ignoringFields("persons.id")
+//                .isEqualTo(expectedResponse);
+//    }
+//
+//
 //    @Test
 //    void shouldReturnAllPersons() throws Exception {
 //        // given

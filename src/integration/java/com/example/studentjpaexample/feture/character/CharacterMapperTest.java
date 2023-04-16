@@ -1,4 +1,4 @@
-package com.example.studentjpaexample.mapper;
+package com.example.studentjpaexample.feture.character;
 
 
 import com.example.studentjpaexmaple.domain.character.CharacterMapper;
